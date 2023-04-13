@@ -15,10 +15,12 @@ import com.shopme.common.entity.User;
 
 @DataJpaTest
 @AutoConfigureTestDatabase(replace=Replace.NONE)
+
 @Rollback(false)
 public class UserRepositoryTest {
 	@Autowired
 	private UserRepository repo;
+	
 	
 	@Autowired
 	private TestEntityManager entityManager;
@@ -81,4 +83,10 @@ public class UserRepositoryTest {
 		User username=repo.getUserByEmail("ravi@gmail.com");
 		assertThat(username).isNotNull();
 	}
+	@Test
+	public void testStatus() {
+		repo.updateEnableStatus(2, true);
+	}
+	
+	
 }

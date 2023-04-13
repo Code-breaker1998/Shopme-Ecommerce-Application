@@ -9,7 +9,10 @@ import org.springframework.stereotype.Service;
 import com.shopme.common.entity.Role;
 import com.shopme.common.entity.User;
 
+import jakarta.transaction.Transactional;
+
 @Service
+@Transactional
 public class UserService {
 
 	@Autowired
@@ -29,9 +32,23 @@ public class UserService {
 		return (List<Role>)roleRepo.findAll();
 	}
 
-	public void usersave(User user) {
-		encodePassword(user);
-		userrepo.save(user);
+	public User save(User user) {
+		boolean isUpdatingUser = (user.getId() != null);
+		
+		if (isUpdatingUser) {
+			User existingUser = userrepo.findById(user.getId()).get();
+			
+			if (user.getPassword().isEmpty()) {
+				user.setPassword(existingUser.getPassword());
+			} else {
+				encodePassword(user);
+			}
+			
+		} else {		
+			encodePassword(user);
+		}
+		
+		 return userrepo.save(user);
 	}
 	
 	private void encodePassword(User user) {
@@ -39,8 +56,46 @@ public class UserService {
 		user.setPassword(encodedPassword);
 	}
 	
-	public boolean isEmailUnique(String user) {
+	public boolean isEmailUnique(Integer id,String user) {
 		User username=userrepo.getUserByEmail(user);
-		return username==null;
+		
+		if(username==null) return true;
+		
+		boolean isCreatingNew =(id==null);
+		
+		if(isCreatingNew) {
+			if(username != null) return false;
+		}else {
+			if(username.getId() != id) {
+				return false;
+			}
+		}
+		
+		return true;
+	}
+
+	public User get(Integer id) throws UserNotFoundException {
+		try {
+		User username=userrepo.findById(id).get();
+		return username;
+		}catch(Exception ex) {
+			throw new UserNotFoundException("Could not find any user with ID"+id);
+		}
+	}
+	
+	public void delete(int id) throws UserNotFoundException {
+		try {
+			Long Userdelete=userrepo.countById(id);
+			userrepo.deleteById(id);
+			
+		}
+		catch(Exception ex) {
+			throw new UserNotFoundException("Could not find any user with ID:" + id);
+		}
+	}
+	
+	public void generateStatus(int id, boolean status) {
+		 userrepo.updateEnableStatus(id, status);
+		
 	}
 }

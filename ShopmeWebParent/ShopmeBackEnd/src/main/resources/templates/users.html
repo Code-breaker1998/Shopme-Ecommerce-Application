@@ -6,8 +6,11 @@
 	 
 <title>Home-Shopme Admin</title>
 <link rel="stylesheet" type="text/css" th:href="@{webjars/bootstrap/css/bootstrap.min.css}" />
+<link rel='stylesheet' type='text/css' th:href='@{/fontawesome/all.css}' />
 <script type="text/javascript" th:src="@{/webjars/jquery/jquery.min.js}"></script>
 <script type="text/javascript" th:src="@{/webjars/bootstrap/js/bootstrap.min.js}"></script>
+
+
 </head>
 
 <body>
@@ -78,19 +81,29 @@
 						<th>Last Name</th>
 						<th>Roles</th>
 						<th>Enabled</th>
+						<th></th>
 					</tr>
 					
 				</thead>
 				<tbody>
 					<tr th:each="user : ${listUsers}">
 					<td>[[${user.id}]]</td>
-					<td></td>
+					<td>
+						<span th:if="${user.photos==null}" class="fas fa-portrait fa-3x icon-silver"></span>
+						<img th:if="${user.photos!=null}" th:src="@{${user.photosImagePath}}" 
+						  style="width:100px"/>
+					</td>
 					<td>[[${user.email}]]</td>
 					<td>[[${user.firstName}]]</td>
 					<td>[[${user.lastName}]]</td>
 					<td>[[${user.roles}]]</td>
-					<td>[[${user.enabled}]]</td>
-					<td>Edit &nbsp; Delete</td>
+					<td><a th:if="${user.enabled ==true}" class="fas fa-check-circle fa-2x icon-green" 
+					th:href="@{'/users/' +${user.id} +'/enabled/false'}" title="Disabled the user"></a>
+					    <a th:if="${user.enabled ==false}" class="fas fa-circle fa-2x icon-dark" 
+					    th:href="@{'/users/' +${user.id} +'/enabled/true'}" title="Enabled the user"></a>
+					</td>
+					<td><a th:href="@{'/users/edit/' + ${user.id}}" title="Edit this user">Edit</a> &nbsp; 
+					<a th:href="@{'/users/delete/' + ${user.id}}" title="Delete this user">Delete</a></td>
 				</tbody>
 			</table>
 		</div>
