@@ -107,4 +107,17 @@ public class UserRepositoryTest {
 		assertThat(listUsers.size()).isEqualTo(pageSize);
 	}
 	
+	@Test
+	public void testUsers() {
+		Iterable<User> data=repo.findAll();
+		data.forEach(row -> System.out.println(row.getId() +' ' +row.getEmail()+' '+row.getFirstName()+' '+row.getLastName()+' '+row.isEnabled()));
+	
+	}
+	
+	@Test
+	public void testUsers1() {
+		Iterable<User> data=repo.findSelectedColumns();
+		data.forEach(row -> System.out.println(row.getId() +' ' +row.getEmail()+' '+row.getFirstName()+' '+row.getLastName()+' '+row.isEnabled()));
+	
+	}
 }

@@ -1,8 +1,11 @@
 package com.shopme.admin.user;
 
 
+import java.util.List;
+
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
@@ -11,7 +14,7 @@ import org.springframework.data.repository.query.Param;
 
 import com.shopme.common.entity.User;
 
-public interface UserRepository extends CrudRepository<User, Integer>, PagingAndSortingRepository<User, Integer> {
+public interface UserRepository extends CrudRepository<User, Integer>, PagingAndSortingRepository<User, Integer>,JpaRepository<User, Integer> {
 	@Query("Select u from User u where u.email=:email")
 	public User getUserByEmail(@Param("email") String email);
 	
@@ -24,4 +27,7 @@ public interface UserRepository extends CrudRepository<User, Integer>, PagingAnd
 	@Query("Update User u set u.enabled=:status where u.id=:id ")
 	@Modifying
 	public void updateEnableStatus(@Param("id") Integer id,@Param ("status") boolean status);
+	
+	@Query("Select u.id,u.email,u.firstName,u.lastName,u.enabled from User u")
+	public List<User> findSelectedColumns();
 }

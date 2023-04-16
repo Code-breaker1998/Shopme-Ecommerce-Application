@@ -66,6 +66,7 @@
 		<div>
 			<h2>Manage Users</h2>
 			<a th:href="@{/users/new}">Create New User</a>
+			<a th:href="@{/users/export/csv}">Export to csv</a>
 		</div>
 		<div th:if="${message != null}" class="alert alert-success text-center">
 			[[${message}]]
@@ -73,8 +74,8 @@
 		
 		<div>
 			<form th:action="@{/users/page/1}" class="form-inline m-3" >
-			<input type="text" name="sortField" th:value=${sortField}/>
-			<input type="text" name="sortDir" th:value=${sortDir}/>
+			<input type="hidden" name="sortField" th:value="${sortField}"/>
+			<input type="hidden" name="sortDir" th:value="${sortDir}"/>
 			
 			Filter:&nbsp;
 			<input type="search" name="keyword" th:value=${keyword}  required/>
@@ -94,11 +95,11 @@
 						<th>Email</th>
 						<th>
 						<a th:if="${sortField !='firstName'}" class="text-black"
-						   th:href="@{'/users/page/' + ${currentPage} + '?sortField=firstName&sortDir=' + ${sortDir}}">First Name
+						   th:href="@{'/users/page/' + ${currentPage} + '?sortField=firstName&sortDir=' + ${sortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">First Name
 						</a>
 						
 						<a th:if="${sortField =='firstName'}" class="text-black"
-						   th:href="@{'/users/page/' + ${currentPage} + '?sortField=firstName&sortDir=' + ${reverseSortDir}}">First Name
+						   th:href="@{'/users/page/' + ${currentPage} + '?sortField=firstName&sortDir=' + ${reverseSortDir} + ${keyword != null ? '&keyword=' + keyword : ''}}">First Name
 						</a>
 						<span th:if="${sortField=='firstName'}"
 						      th:class="${sortDir=='asc' ? 'fas fa-sort-up' :'fas fa-sort-down'}"></span>

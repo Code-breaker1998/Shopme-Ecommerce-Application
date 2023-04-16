@@ -1,6 +1,7 @@
 package com.shopme.admin.user;
 
 import java.io.IOException;
+import java.net.http.HttpResponse;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -129,5 +130,10 @@ public class UserController {
 		String message="The user " + id+" has been " +status;
 		redirectAttributes.addFlashAttribute("message",message);
 		return "redirect:/users";
+	}
+	
+	@GetMapping("users/export/csv")
+	public void exportToCsv(HttpResponse response) {
+		System.out.println("hello");
 	}
 }
